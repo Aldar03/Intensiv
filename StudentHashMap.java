@@ -1,44 +1,21 @@
 import java.util.LinkedList;
 
-class Student {
-    private final String id;
-    private final String name;
+public class HashMap<K, V> {
+    private static class Entry<K, V> {
+        K key;
+        V value;
 
-    public Student(String id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public String toString() {
-        return "Student{id='" + id + "', name='" + name + "'}";
-    }
-}
-
-class StudentHashMap {
-    private static class Entry {
-        String key;
-        Student value;
-
-        Entry(String key, Student value) {
+        Entry(K key, V value) {
             this.key = key;
             this.value = value;
         }
     }
 
-    private final LinkedList<Entry>[] map;
+    private final LinkedList<Entry<K, V>>[] map;
     private final int size;
 
     @SuppressWarnings("unchecked")
-    public StudentHashMap(int size) {
+    public HashMap(int size) {
         this.size = size;
         map = new LinkedList[size];
         for (int i = 0; i < size; i++) {
@@ -46,24 +23,24 @@ class StudentHashMap {
         }
     }
 
-    private int hash(String key) {
+    private int hash(K key) {
         return (key.hashCode() % size + size) % size;
     }
 
-    public void put(String key, Student value) {
+    public void put(K key, V value) {
         int index = hash(key);
-        for (Entry entry : map[index]) {
+        for (Entry<K, V> entry : map[index]) {
             if (entry.key.equals(key)) {
                 entry.value = value;
                 return;
             }
         }
-        map[index].add(new Entry(key, value));
+        map[index].add(new Entry<>(key, value));
     }
 
-    public Student get(String key) {
+    public V get(K key) {
         int index = hash(key);
-        for (Entry entry : map[index]) {
+        for (Entry<K, V> entry : map[index]) {
             if (entry.key.equals(key)) {
                 return entry.value;
             }
@@ -71,9 +48,9 @@ class StudentHashMap {
         return null;
     }
 
-    public boolean remove(String key) {
+    public boolean remove(K key) {
         int index = hash(key);
-        for (Entry entry : map[index]) {
+        for (Entry<K, V> entry : map[index]) {
             if (entry.key.equals(key)) {
                 map[index].remove(entry);
                 return true;
@@ -83,12 +60,16 @@ class StudentHashMap {
     }
 
     public static void main(String[] args) {
-        StudentHashMap studentMap = new StudentHashMap(10);
-        studentMap.put("123", new Student("123", "АЛДАР"));
-        studentMap.put("456", new Student("456", "ИВАН"));
+        HashMap<String, Integer> map = new HashMap<>(10);
+        map.put("один", 1);
+        map.put("два", 2);
 
-        System.out.println(studentMap.get("123"));
-        studentMap.remove("123");
-        System.out.println(studentMap.get("123"));
+        System.out.println("Значение для 'один': " + map.get("один"));
+        map.remove("один");
+        System.out.println("Значение для 'один' после удаления: " + map.get("один"));
+
+        HashMap<Integer, String> intKeyMap = new HashMap<>(10);
+        intKeyMap.put(42, "Значение для ключа 42");
+        System.out.println("Значение для ключа 42: " + intKeyMap.get(42));
     }
 }
