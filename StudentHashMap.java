@@ -1,5 +1,3 @@
-public class StudentHashMap {
-}
 import java.util.LinkedList;
 
 class Student {
@@ -49,7 +47,7 @@ class StudentHashMap {
     }
 
     private int hash(String key) {
-        return key.hashCode() % size;
+        return (key.hashCode() % size + size) % size;
     }
 
     public void put(String key, Student value) {
