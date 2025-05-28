@@ -11,8 +11,8 @@ public class HashMap<K, V> {
         }
     }
 
-    private final LinkedList<Entry<K, V>>[] map;
-    private final int size;
+    private LinkedList<Entry<K, V>>[] map;
+    private int size;
 
     @SuppressWarnings("unchecked")
     public HashMap(int size) {
@@ -59,17 +59,41 @@ public class HashMap<K, V> {
         return false;
     }
 
+    @SuppressWarnings("unchecked")
+    public void resize(int newSize) {
+        LinkedList<Entry<K, V>>[] oldMap = map;
+        int oldSize = size;
+
+        size = newSize;
+        map = new LinkedList[newSize];
+        for (int i = 0; i < newSize; i++) {
+            map[i] = new LinkedList<>();
+        }
+
+        for (int i = 0; i < oldSize; i++) {
+            for (Entry<K, V> entry : oldMap[i]) {
+                put(entry.key, entry.value);
+            }
+        }
+    }
+
     public static void main(String[] args) {
         HashMap<String, Integer> map = new HashMap<>(10);
         map.put("один", 1);
         map.put("два", 2);
+        map.put("три", 3);
 
         System.out.println("Значение для 'один': " + map.get("один"));
-        map.remove("один");
-        System.out.println("Значение для 'один' после удаления: " + map.get("один"));
+        System.out.println("Значение для 'два': " + map.get("два"));
+        System.out.println("Значение для 'три': " + map.get("три"));
 
-        HashMap<Integer, String> intKeyMap = new HashMap<>(10);
-        intKeyMap.put(42, "Значение для ключа 42");
-        System.out.println("Значение для ключа 42: " + intKeyMap.get(42));
+        System.out.println("\nМеняем размер хэш-карты на 20...\n");
+        map.resize(20);
+
+        System.out.println("Значение для 'один': " + map.get("один"));
+        System.out.println("Значение для 'два': " + map.get("два"));
+        System.out.println("Значение для 'три': " + map.get("три"));
     }
 }
+
+
